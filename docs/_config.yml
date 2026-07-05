@@ -1,0 +1,10 @@
+title: Assistive Switch Interfaces
+description: Open-source, low-cost BLE adaptive switch interfaces for iPadOS/iOS Switch Control and Android Switch Access.
+theme: jekyll-theme-minimal
+show_downloads: true
+
+# Render every .md file in this folder as a page (index, and each project doc).
+include:
+  - "*.md"
+
+markdown: kramdown

@@ -1,17 +1,6 @@
 ---
+layout: default
 title: Assistive Switch Interfaces
-category: Accessibility
-author: Michael Ryan Hunsaker, M.Ed., Ph.D.
-tags:
-  - accessibility
-  - switch-access
-  - esp32
-  - arduino
-  - ble
-  - iOS
-  - iPadOS
-  - Android
-  - open-source-hardware
 ---
 
 # Assistive Switch Interfaces
@@ -22,11 +11,7 @@ This repository collects firmware for turning inexpensive, off-the-shelf compone
 
 The goal is straightforward: assistive technology that a classroom, clinic, or individual family can build, flash, repair, and adapt themselves, using parts anyone can buy and code anyone can read.
 
-> 📖 **Full documentation site:** [mrhunsaker.github.io/Assistive_Switch_Interfaces](https://mrhunsaker.github.io/Assistive_Switch_Interfaces/) — built automatically from the `docs/` folder in this repo via GitHub Actions (see `.github/workflows/pages.yml`).
-
----
-
-[TOC]
+> 📄 Source code and full repository: [github.com/mrhunsaker/Assistive_Switch_Interfaces](https://github.com/mrhunsaker/Assistive_Switch_Interfaces)
 
 ---
 
@@ -38,22 +23,22 @@ Commercial switch interfaces are reliable but expensive, and they're closed boxe
 - **Zero-install pairing.** Every device advertises as a standard BLE HID keyboard. There is no companion app to install, update, or lose support over time.
 - **No crosstalk between inputs.** Every physical input gets its own independent debounce/edge-trigger state. One input being held, bouncing, or mid-press can never suppress, delay, or falsely trigger another input's keystroke.
 - **Legible feedback.** An onboard RGB LED gives instant, simple color feedback (by input *type*, not by individual sensor) so non-technical staff can verify a device is working in seconds.
-- **Fully open.** All firmware, wiring diagrams, and documentation are released under the Apache License 2.0 (see `LICENSE`) so any district, clinic, or individual maker can build, modify, and redistribute these devices without restriction.
+- **Fully open.** All firmware, wiring diagrams, and documentation are released under the Apache License 2.0 so any district, clinic, or individual maker can build, modify, and redistribute these devices without restriction.
 
 ---
 
-# Projects in This Repository
+# Projects
 
-| Folder | Documentation Page | What It Is | Inputs | HID Keys Sent |
-|---|---|---|---|---|
-| [`BLE_ADAPTIVE_SWITCH_EXPANDED_SCAFFOLD/`](./BLE_ADAPTIVE_SWITCH_EXPANDED_SCAFFOLD/) | [View →](https://mrhunsaker.github.io/Assistive_Switch_Interfaces/ble-adaptive-switch-expanded-scaffold.html) | The full 11-input adaptive switch node — the primary classroom/clinical device in this repo | 6 capacitive touch sensors, 1 proximity sensor, 4 mechanical switches | F1–F6 (touch), F8 (proximity), F9–F12 (switch) |
-| [`BLE_3_SWITCH_INTERFACE/`](./BLE_3_SWITCH_INTERFACE/) | [View →](https://mrhunsaker.github.io/Assistive_Switch_Interfaces/ble-3-switch-interface.html) | A simplified 3-switch directional controller — no touch or proximity hardware, just three mechanical switches (left/middle/right) | 3 mechanical switches | LEFT_ARROW, ENTER, RIGHT_ARROW |
+| Project | What It Is | Inputs | HID Keys Sent |
+|---|---|---|---|
+| [BLE Adaptive Switch Node (Expanded Scaffold)](ble-adaptive-switch-expanded-scaffold.html) | The full 11-input adaptive switch node — the primary classroom/clinical device in this repo | 6 capacitive touch sensors, 1 proximity sensor, 4 mechanical switches | F1–F6 (touch), F8 (proximity), F9–F12 (switch) |
+| [BLE 3-Switch Interface](ble-3-switch-interface.html) | A simplified 3-switch directional controller — no touch or proximity hardware, just three mechanical switches (left/middle/right) | 3 mechanical switches | LEFT_ARROW, ENTER, RIGHT_ARROW |
 
-Each folder has its own complete README with full pinout, wiring, BLE behavior, LED reference, and build/flash instructions specific to that device. This top-level README covers what's shared across the whole project — the parts you need to get right once, regardless of which firmware you're flashing.
+Each project page has full pinout, wiring, BLE behavior, LED reference, and build/flash instructions specific to that device. This home page covers what's shared across the whole project — the parts you need to get right once, regardless of which firmware you're flashing.
 
 ### BLE Adaptive Switch Node (Expanded Scaffold)
 
-The flagship device: 11 independent inputs (6 touch, 1 proximity, 4 switch), each mapped to a unique HID key so that Switch Control / Switch Access can tell every input apart. Includes a district-oriented implementation manual (`BLE_Adaptive_Switch_District_Manual_Complete.docx`) written for teachers, paraeducators, AT specialists, and IT/technology staff, covering daily use and testing, pairing on iPad/iPhone/Android, firmware flashing, and asset management — no programming background required for the day-to-day sections.
+The flagship device: 11 independent inputs (6 touch, 1 proximity, 4 switch), each mapped to a unique HID key so that Switch Control / Switch Access can tell every input apart. The repository also includes a district-oriented implementation manual (`BLE_Adaptive_Switch_District_Manual_Complete.docx`) written for teachers, paraeducators, AT specialists, and IT/technology staff, covering daily use and testing, pairing on iPad/iPhone/Android, firmware flashing, and asset management — no programming background required for the day-to-day sections.
 
 ### BLE 3-Switch Arrow/Enter Node
 
@@ -78,7 +63,7 @@ Mechanical switches always use `INPUT_PULLUP` (switch closure pulls the pin LOW,
 
 Every device in this repo is built from the same core pattern, regardless of how many or which kinds of inputs it has:
 
-1. Each physical input is read every loop iteration and passed through a shared-*logic*-but-independent-*state* debounce function — every input has its own debounce struct instance, so timing on one input never affects another.
+1. Each physical input is read every loop iteration and passed through a debounce function — every input has its own debounce struct instance, so timing on one input never affects another.
 2. A debounced **transition into the active state** (not the held state) fires exactly one HID keystroke — press immediately followed by release a few tens of milliseconds later. Holding an input does not repeat the keystroke.
 3. Keystrokes are sent over a NimBLE HID input report characteristic and notified to the connected host; if nothing is connected, the send is skipped and logged, with no queuing or buffering.
 4. A standard Bluetooth **Battery Service** (UUID `0x180F`), pinned at 100%, is included in every build. This isn't cosmetic — some Android devices refuse to complete BLE HID keyboard pairing without it, and this was verified against a Nokia G100 running Android 12.
@@ -121,18 +106,18 @@ To install the correct version:
 
 # Getting Started
 
-1. Pick the project that matches your needs — the full 11-input node, or the simplified 3-switch controller — and open its folder for the complete pinout and wiring diagram.
+1. Pick the project that matches your needs — the [full 11-input node](ble-adaptive-switch-expanded-scaffold.html), or the [simplified 3-switch controller](ble-3-switch-interface.html) — and open its page for the complete pinout and wiring diagram.
 2. Install Arduino IDE board package **esp32 2.0.17** and the pinned library versions listed above.
-3. Follow the build/flash instructions in that project's own README.
+3. Follow the build/flash instructions on that project's page.
 4. Pair the finished device with an iPad, iPhone, or Android device like any standard Bluetooth keyboard, then configure Switch Control (iOS/iPadOS) or Switch Access (Android) to recognize each key.
 
-Each sub-project README also includes a Quick Functional Test so you can confirm every input is wired and firing correctly before deploying the device to a student or client.
+Each project page also includes a Quick Functional Test so you can confirm every input is wired and firing correctly before deploying the device to a student or client.
 
 ---
 
 # License
 
-Released under the **Apache License 2.0** (see `LICENSE`). You are free to build, modify, and redistribute any device in this repository, including for commercial or district-wide deployment, subject to the terms of that license.
+Released under the **Apache License 2.0**. You are free to build, modify, and redistribute any device in this repository, including for commercial or district-wide deployment, subject to the terms of that license.
 
 ---
 
@@ -145,4 +130,4 @@ This project is written to be usable by:
 - **AT specialists** configuring Switch Control / Switch Access mappings for a specific student.
 - **District IT/technology staff** flashing, maintaining, and inventorying devices at scale.
 
-The expanded scaffold's district manual is written explicitly for that full range of roles; the individual project READMEs cover the technical build/flash process for maker and IT audiences.
+The expanded scaffold's district manual is written explicitly for that full range of roles; the individual project pages cover the technical build/flash process for maker and IT audiences.
